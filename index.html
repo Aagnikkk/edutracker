@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduTrack - Student Fees Tracker</title>
+    <title>EduTrack - Teacher Fee Management</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -38,6 +38,50 @@
             color: var(--dark);
             overflow-x: hidden;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        /* Login/Signup Form Styles */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: var(--card-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .auth-header p {
+            color: var(--gray);
+        }
+
+        .auth-footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--gray);
+        }
+
+        .auth-footer a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
         }
 
         /* Main Container Layout */
@@ -651,6 +695,10 @@
                 flex-direction: column;
                 gap: 0;
             }
+            
+            .auth-card {
+                padding: 30px 20px;
+            }
         }
         
         /* Menu Toggle Button (for mobile) */
@@ -704,13 +752,85 @@
     </style>
 </head>
 <body>
-    <!-- Menu Toggle Button (visible on mobile only) -->
-    <div class="menu-toggle" id="menuToggle">
-        <i class="fas fa-bars"></i>
+    <!-- Login/Signup Form (shown initially) -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1><i class="fas fa-graduation-cap"></i> EduTrack</h1>
+                <p>Teacher Fee Management System</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="loginEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="loginPassword" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                Don't have an account? <a href="#" id="showSignup">Sign up</a>
+            </div>
+        </div>
     </div>
-    
-    <!-- Main Container -->
-    <div class="container">
+
+    <!-- Signup Form (hidden initially) -->
+    <div class="auth-container" id="signupContainer" style="display: none;">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1><i class="fas fa-graduation-cap"></i> EduTrack</h1>
+                <p>Create Teacher Account</p>
+            </div>
+            
+            <form id="signupForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-control" id="signupName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Subject</label>
+                    <input type="text" class="form-control" id="signupSubject" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-control" id="signupEmail" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" id="signupPassword" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="signupConfirmPassword" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                </div>
+            </form>
+            
+            <div class="auth-footer">
+                Already have an account? <a href="#" id="showLogin">Login</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Container (hidden initially) -->
+    <div class="container" id="appContainer" style="display: none;">
+        <!-- Menu Toggle Button (visible on mobile only) -->
+        <div class="menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        
         <!-- Sidebar Navigation -->
         <aside class="sidebar" id="sidebar">
             <div class="logo">
@@ -750,6 +870,12 @@
                             <span>Settings</span>
                         </a>
                     </li>
+                    <li>
+                        <a href="#" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             
@@ -758,8 +884,8 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="user-info">
-                    <span class="name">Ms. Priya Sharma</span>
-                    <span class="role">Mathematics Teacher</span>
+                    <span class="name" id="sidebarUserName">Loading...</span>
+                    <span class="role" id="sidebarUserRole">Teacher</span>
                 </div>
             </div>
         </aside>
@@ -881,7 +1007,7 @@
                 
                 <div class="content-card">
                     <div class="card-header">
-                        <h2>All Students</h2>
+                        <h2>My Students</h2>
                         <div class="card-actions">
                             <select class="form-select" id="classFilter">
                                 <option value="all">All Classes</option>
@@ -1011,8 +1137,8 @@
                                 <input type="text" class="form-control" id="userName" required>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Role</label>
-                                <input type="text" class="form-control" id="userRole" required>
+                                <label class="form-label">Subject</label>
+                                <input type="text" class="form-control" id="userSubject" required>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Email</label>
@@ -1210,20 +1336,29 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Data Storage
+        let teachers = JSON.parse(localStorage.getItem('teachers')) || [];
         let students = JSON.parse(localStorage.getItem('students')) || [];
         let payments = JSON.parse(localStorage.getItem('payments')) || [];
         let feeRecords = JSON.parse(localStorage.getItem('feeRecords')) || [];
-        let settings = JSON.parse(localStorage.getItem('settings')) || {
-            userName: "Ms. Priya Sharma",
-            userRole: "Mathematics Teacher",
-            userEmail: "priya.sharma@school.edu"
-        };
+        
+        // Current logged in teacher
+        let currentTeacher = null;
 
         // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const signupContainer = document.getElementById('signupContainer');
+        const appContainer = document.getElementById('appContainer');
         const menuToggle = document.getElementById('menuToggle');
         const sidebar = document.getElementById('sidebar');
         const navLinks = document.querySelectorAll('.nav-menu a');
         const contentSections = document.querySelectorAll('.content-section');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Auth Elements
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const showSignup = document.getElementById('showSignup');
+        const showLogin = document.getElementById('showLogin');
 
         // Dashboard Elements
         const totalStudentsEl = document.getElementById('totalStudents');
@@ -1252,7 +1387,7 @@
         // Settings Elements
         const settingsForm = document.getElementById('settingsForm');
         const userName = document.getElementById('userName');
-        const userRole = document.getElementById('userRole');
+        const userSubject = document.getElementById('userSubject');
         const userEmail = document.getElementById('userEmail');
         const userPassword = document.getElementById('userPassword');
         const userConfirmPassword = document.getElementById('userConfirmPassword');
@@ -1270,60 +1405,80 @@
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if teacher is already logged in
+            const loggedInTeacherId = localStorage.getItem('loggedInTeacher');
+            if (loggedInTeacherId) {
+                currentTeacher = teachers.find(teacher => teacher.id === loggedInTeacherId);
+                if (currentTeacher) {
+                    showApp();
+                }
+            }
+
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        function showApp() {
+            authContainer.style.display = 'none';
+            appContainer.style.display = 'flex';
+            
+            // Update UI with teacher data
+            document.getElementById('sidebarUserName').textContent = currentTeacher.name;
+            document.getElementById('sidebarUserRole').textContent = currentTeacher.subject + ' Teacher';
+            
             // Load initial data
             loadSettings();
             loadDashboard();
             loadStudents();
             loadFeeRecords();
             initCharts();
-
-            // Navigation functionality
+            
+            // Setup navigation
             setupNavigation();
-
-            // Button event listeners
-            setupEventListeners();
-
+            
             // Update stats
             updateStats();
-        });
+        }
 
         function setupNavigation() {
             // Handle navigation clicks
             navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    
-                    // Get the target section
-                    const targetSection = this.getAttribute('data-section');
-                    
-                    // Update active nav item
-                    navLinks.forEach(navLink => {
-                        navLink.parentElement.classList.remove('active');
-                    });
-                    this.parentElement.classList.add('active');
-                    
-                    // Show the target section
-                    contentSections.forEach(section => {
-                        section.classList.remove('active');
-                    });
-                    document.getElementById(targetSection).classList.add('active');
-                    
-                    // Close sidebar on mobile after selection
-                    if (window.innerWidth <= 992) {
-                        sidebar.classList.remove('active');
-                    }
+                if (link.getAttribute('data-section')) {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Get the target section
+                        const targetSection = this.getAttribute('data-section');
+                        
+                        // Update active nav item
+                        navLinks.forEach(navLink => {
+                            navLink.parentElement.classList.remove('active');
+                        });
+                        this.parentElement.classList.add('active');
+                        
+                        // Show the target section
+                        contentSections.forEach(section => {
+                            section.classList.remove('active');
+                        });
+                        document.getElementById(targetSection).classList.add('active');
+                        
+                        // Close sidebar on mobile after selection
+                        if (window.innerWidth <= 992) {
+                            sidebar.classList.remove('active');
+                        }
 
-                    // Refresh the section if needed
-                    if (targetSection === 'dashboard') {
-                        loadDashboard();
-                    } else if (targetSection === 'students') {
-                        loadStudents();
-                    } else if (targetSection === 'fee-records') {
-                        loadFeeRecords();
-                    } else if (targetSection === 'reports') {
-                        initCharts();
-                    }
-                });
+                        // Refresh the section if needed
+                        if (targetSection === 'dashboard') {
+                            loadDashboard();
+                        } else if (targetSection === 'students') {
+                            loadStudents();
+                        } else if (targetSection === 'fee-records') {
+                            loadFeeRecords();
+                        } else if (targetSection === 'reports') {
+                            initCharts();
+                        }
+                    });
+                }
             });
             
             // Toggle sidebar on mobile
@@ -1342,6 +1497,21 @@
         }
 
         function setupEventListeners() {
+            // Auth events
+            loginForm.addEventListener('submit', handleLogin);
+            signupForm.addEventListener('submit', handleSignup);
+            showSignup.addEventListener('click', function(e) {
+                e.preventDefault();
+                authContainer.style.display = 'none';
+                signupContainer.style.display = 'flex';
+            });
+            showLogin.addEventListener('click', function(e) {
+                e.preventDefault();
+                signupContainer.style.display = 'none';
+                authContainer.style.display = 'flex';
+            });
+            logoutBtn.addEventListener('click', handleLogout);
+
             // Dashboard events
             document.getElementById('addPaymentBtn').addEventListener('click', openPaymentModal);
             dashboardSearch.addEventListener('input', filterDashboard);
@@ -1406,40 +1576,115 @@
             });
         }
 
-        function loadSettings() {
-            userName.value = settings.userName;
-            userRole.value = settings.userRole;
-            userEmail.value = settings.userEmail;
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Find teacher with matching credentials
+            const teacher = teachers.find(t => t.email === email && t.password === password);
+            
+            if (teacher) {
+                currentTeacher = teacher;
+                localStorage.setItem('loggedInTeacher', teacher.id);
+                showApp();
+            } else {
+                alert('Invalid email or password');
+            }
+        }
 
-            // Update profile in sidebar
-            document.querySelector('.user-info .name').textContent = settings.userName;
-            document.querySelector('.user-info .role').textContent = settings.userRole;
+        function handleSignup(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('signupName').value;
+            const subject = document.getElementById('signupSubject').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            
+            if (password !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            // Check if email already exists
+            if (teachers.some(t => t.email === email)) {
+                alert('Email already registered');
+                return;
+            }
+            
+            // Create new teacher
+            const newTeacher = {
+                id: generateId(),
+                name,
+                subject,
+                email,
+                password,
+                createdAt: new Date().toISOString()
+            };
+            
+            teachers.push(newTeacher);
+            localStorage.setItem('teachers', JSON.stringify(teachers));
+            
+            // Log in the new teacher
+            currentTeacher = newTeacher;
+            localStorage.setItem('loggedInTeacher', newTeacher.id);
+            showApp();
+            
+            // Reset form and show login
+            signupForm.reset();
+            signupContainer.style.display = 'none';
+            authContainer.style.display = 'flex';
+        }
+
+        function handleLogout(e) {
+            e.preventDefault();
+            
+            currentTeacher = null;
+            localStorage.removeItem('loggedInTeacher');
+            
+            appContainer.style.display = 'none';
+            authContainer.style.display = 'flex';
+            loginForm.reset();
+        }
+
+        function loadSettings() {
+            userName.value = currentTeacher.name;
+            userSubject.value = currentTeacher.subject;
+            userEmail.value = currentTeacher.email;
         }
 
         function loadDashboard() {
             // Load recent payments (last 5)
-            const recentPayments = payments.slice(0, 5);
+            const teacherPayments = payments.filter(p => p.teacherId === currentTeacher.id);
+            const recentPayments = teacherPayments.slice(0, 5);
             renderPayments(recentPayments, recentPaymentsEl);
         }
 
         function loadStudents() {
-            renderStudents(students, studentsList);
+            const teacherStudents = students.filter(s => s.teacherId === currentTeacher.id);
+            renderStudents(teacherStudents, studentsList);
         }
 
         function loadFeeRecords() {
-            renderFeeRecords(feeRecords, feeRecordsList);
+            const teacherRecords = feeRecords.filter(r => r.teacherId === currentTeacher.id);
+            renderFeeRecords(teacherRecords, feeRecordsList);
         }
 
         function updateStats() {
-            totalStudentsEl.textContent = students.length;
+            const teacherStudents = students.filter(s => s.teacherId === currentTeacher.id);
+            totalStudentsEl.textContent = teacherStudents.length;
             
-            const paidCount = payments.filter(p => p.status === 'paid').length;
+            const teacherPayments = payments.filter(p => p.teacherId === currentTeacher.id);
+            const paidCount = teacherPayments.filter(p => p.status === 'paid').length;
             paidFeesEl.textContent = paidCount;
             
-            const pendingCount = feeRecords.filter(r => r.status === 'pending').length;
+            const teacherRecords = feeRecords.filter(r => r.teacherId === currentTeacher.id);
+            const pendingCount = teacherRecords.filter(r => r.status === 'pending').length;
             pendingFeesEl.textContent = pendingCount;
             
-            const totalAmount = payments.reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
+            const totalAmount = teacherPayments.reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
             totalCollectedEl.textContent = `₹${totalAmount.toLocaleString('en-IN')}`;
         }
 
@@ -1541,7 +1786,8 @@
                 // Count paid and pending fees for this student
                 const studentPayments = payments.filter(p => p.studentId === student.id);
                 const paidCount = studentPayments.filter(p => p.status === 'paid').length;
-                const pendingCount = feeRecords.filter(r => r.studentId === student.id && r.status === 'pending').length;
+                const studentRecords = feeRecords.filter(r => r.studentId === student.id);
+                const pendingCount = studentRecords.filter(r => r.status === 'pending').length;
                 
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -1675,8 +1921,9 @@
             // Payment Methods Chart
             const paymentMethodsCtx = document.getElementById('paymentMethodsChart').getContext('2d');
             
-            // Group payments by method
-            const paymentMethodsData = payments.reduce((acc, payment) => {
+            // Group payments by method for current teacher
+            const teacherPayments = payments.filter(p => p.teacherId === currentTeacher.id);
+            const paymentMethodsData = teacherPayments.reduce((acc, payment) => {
                 acc[payment.method] = (acc[payment.method] || 0) + 1;
                 return acc;
             }, {});
@@ -1730,8 +1977,8 @@
             // Monthly Collection Chart
             const monthlyCollectionCtx = document.getElementById('monthlyCollectionChart').getContext('2d');
             
-            // Group payments by month
-            const monthlyData = payments.reduce((acc, payment) => {
+            // Group payments by month for current teacher
+            const monthlyData = teacherPayments.reduce((acc, payment) => {
                 const date = new Date(payment.date);
                 const monthYear = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
                 
@@ -1793,11 +2040,12 @@
 
         // Modal Functions
         function openPaymentModal() {
-            // Load students into dropdown
+            // Load teacher's students into dropdown
             const studentSelect = document.getElementById('paymentStudent');
             studentSelect.innerHTML = '<option value="">Select Student</option>';
             
-            students.forEach(student => {
+            const teacherStudents = students.filter(s => s.teacherId === currentTeacher.id);
+            teacherStudents.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.id;
                 option.textContent = `${student.firstName} ${student.lastName} (Class ${student.class})`;
@@ -1833,11 +2081,12 @@
         }
 
         function openRecordModal() {
-            // Load students into dropdown
+            // Load teacher's students into dropdown
             const studentSelect = document.getElementById('recordStudent');
             studentSelect.innerHTML = '<option value="">Select Student</option>';
             
-            students.forEach(student => {
+            const teacherStudents = students.filter(s => s.teacherId === currentTeacher.id);
+            teacherStudents.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.id;
                 option.textContent = `${student.firstName} ${student.lastName} (Class ${student.class})`;
@@ -1887,6 +2136,7 @@
             
             const newPayment = {
                 id: generateId(),
+                teacherId: currentTeacher.id,
                 studentId,
                 amount: parseFloat(amount).toFixed(2),
                 date,
@@ -1919,6 +2169,7 @@
             
             const newStudent = {
                 id: generateId(),
+                teacherId: currentTeacher.id,
                 firstName,
                 lastName,
                 class: studentClass,
@@ -1949,6 +2200,7 @@
             
             const newRecord = {
                 id: generateId(),
+                teacherId: currentTeacher.id,
                 studentId,
                 amount: parseFloat(amount).toFixed(2),
                 dueDate,
@@ -2160,12 +2412,12 @@
 
         function saveUserSettings() {
             const name = userName.value;
-            const role = userRole.value;
+            const subject = userSubject.value;
             const email = userEmail.value;
             const password = userPassword.value;
             const confirmPassword = userConfirmPassword.value;
             
-            if (!name || !role || !email) {
+            if (!name || !subject || !email) {
                 alert('Please fill all required fields');
                 return;
             }
@@ -2175,22 +2427,33 @@
                 return;
             }
             
-            settings = {
-                userName: name,
-                userRole: role,
-                userEmail: email
-            };
+            // Update current teacher
+            currentTeacher.name = name;
+            currentTeacher.subject = subject;
+            currentTeacher.email = email;
             
-            localStorage.setItem('settings', JSON.stringify(settings));
+            if (password) {
+                currentTeacher.password = password;
+            }
+            
+            // Update in teachers array
+            const teacherIndex = teachers.findIndex(t => t.id === currentTeacher.id);
+            if (teacherIndex !== -1) {
+                teachers[teacherIndex] = currentTeacher;
+            }
+            
+            localStorage.setItem('teachers', JSON.stringify(teachers));
+            localStorage.setItem('loggedInTeacher', currentTeacher.id);
             
             // Update profile in sidebar
-            document.querySelector('.user-info .name').textContent = name;
-            document.querySelector('.user-info .role').textContent = role;
+            document.getElementById('sidebarUserName').textContent = name;
+            document.getElementById('sidebarUserRole').textContent = subject + ' Teacher';
             
             alert('Settings saved successfully');
         }
 
         function saveData() {
+            localStorage.setItem('teachers', JSON.stringify(teachers));
             localStorage.setItem('students', JSON.stringify(students));
             localStorage.setItem('payments', JSON.stringify(payments));
             localStorage.setItem('feeRecords', JSON.stringify(feeRecords));
@@ -2201,7 +2464,7 @@
             const searchTerm = dashboardSearch.value.toLowerCase();
             const filterValue = paymentFilter.value;
             
-            let filteredPayments = [...payments];
+            let filteredPayments = payments.filter(p => p.teacherId === currentTeacher.id);
             
             // Apply search filter
             if (searchTerm) {
@@ -2243,7 +2506,7 @@
             const searchTerm = studentSearch.value.toLowerCase();
             const classFilterValue = classFilter.value;
             
-            let filteredStudents = [...students];
+            let filteredStudents = students.filter(s => s.teacherId === currentTeacher.id);
             
             // Apply search filter
             if (searchTerm) {
@@ -2267,7 +2530,7 @@
             const searchTerm = recordSearch.value.toLowerCase();
             const statusFilter = recordFilter.value;
             
-            let filteredRecords = [...feeRecords];
+            let filteredRecords = feeRecords.filter(r => r.teacherId === currentTeacher.id);
             
             // Apply search filter
             if (searchTerm) {
@@ -2316,11 +2579,24 @@
         }
 
         // Initialize with some sample data if empty
-        if (students.length === 0 && payments.length === 0 && feeRecords.length === 0) {
+        if (teachers.length === 0) {
+            // Add sample teacher
+            teachers = [
+                {
+                    id: 't1',
+                    name: 'Priya Sharma',
+                    subject: 'Mathematics',
+                    email: 'priya@example.com',
+                    password: 'password123',
+                    createdAt: new Date().toISOString()
+                }
+            ];
+            
             // Add sample students
             students = [
                 {
                     id: 's1',
+                    teacherId: 't1',
                     firstName: 'Rahul',
                     lastName: 'Kumar',
                     class: '10',
@@ -2331,6 +2607,7 @@
                 },
                 {
                     id: 's2',
+                    teacherId: 't1',
                     firstName: 'Priya',
                     lastName: 'Sharma',
                     class: '11',
@@ -2341,6 +2618,7 @@
                 },
                 {
                     id: 's3',
+                    teacherId: 't1',
                     firstName: 'Amit',
                     lastName: 'Patel',
                     class: '9',
@@ -2355,6 +2633,7 @@
             payments = [
                 {
                     id: 'p1',
+                    teacherId: 't1',
                     studentId: 's1',
                     amount: '2500',
                     date: new Date().toISOString().split('T')[0],
@@ -2365,6 +2644,7 @@
                 },
                 {
                     id: 'p2',
+                    teacherId: 't1',
                     studentId: 's2',
                     amount: '3000',
                     date: new Date(new Date().setMonth(new Date().getMonth() - 1)).toISOString().split('T')[0],
@@ -2379,6 +2659,7 @@
             feeRecords = [
                 {
                     id: 'r1',
+                    teacherId: 't1',
                     studentId: 's3',
                     amount: '2000',
                     dueDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
@@ -2389,11 +2670,6 @@
             ];
 
             saveData();
-            loadDashboard();
-            loadStudents();
-            loadFeeRecords();
-            updateStats();
-            initCharts();
         }
     </script>
 </body>
